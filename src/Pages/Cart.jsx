@@ -11,7 +11,7 @@ const Cart = ({ taskData }) => {
     const { Description, Status, Title, _id } = taskData
     
     const handelDelete = (id) =>{
-              fetch(`http://localhost:3000/alltask/${id}`, {
+              fetch(`https://task-management-server-lilac-one.vercel.app/alltask/${id}`, {
                 method:'DELETE'
               })
               .then( res => res.json())
@@ -20,7 +20,7 @@ const Cart = ({ taskData }) => {
                 if (data.acknowledged) {
                     Swal.fire({
                         position: 'top-end',
-                        icon: 'error',
+                        icon: 'warning',
                         title: 'Delete',
                         showConfirmButton: false,
                         timer: 1500

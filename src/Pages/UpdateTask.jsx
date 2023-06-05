@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
 import { useLoaderData } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
+import { AuthContext } from './AuthProvider';
 
 const UpdateTask = () => {
     const taskData = useLoaderData();
-    const { Title, Description, Status } = taskData
-    console.log(taskData);
+    const { Title, Description, Status, _id } = taskData
+    const { user } = useContext(AuthContext)
+    // console.log(taskData);
 
     const handelUpdate = (e) => {
         e.preventDefault()
@@ -14,9 +16,11 @@ const UpdateTask = () => {
         const Title = form.Title.value
         const Description = form.Description.value
         const Status = form.Status.value
-        const updateData = { Title, Description, Status }
+        const email = user?.email
+        
+        const updateData = { Title, Description, Status, email }
 
-        fetch(`http://localhost:3000/alltask/${_id}`, {
+        fetch(`https://task-management-server-lilac-one.vercel.app/alltask/${_id}`, {
             method: "PUT",
             headers: {
                 'content-type': 'application/json'
@@ -25,7 +29,16 @@ const UpdateTask = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                // console.log(data);
+                if (data.acknowledged) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your work Update',
+                        showConfirmButton: false,
+                        timer: 1000
+                    })
+                }
             })
 
     }
@@ -35,6 +48,7 @@ const UpdateTask = () => {
                 <h3 className="font-bold text-lg">Title</h3>
                 <input type="text" name='Title' defaultValue={Title} placeholder="Type here Description" className="input input-bordered input-accent w-full" />
                 <h3 className="font-bold text-lg mt-2">Description</h3>
+                <input type="text" name='email' className=' hidden' />
                 <textarea defaultValue={Description} name='Description' className="textarea textarea-success w-full" placeholder="Bio"></textarea>
                 <h3 className="font-bold text-lg">Status</h3>
                 <div className="form-control">
